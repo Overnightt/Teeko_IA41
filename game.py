@@ -1,0 +1,1 @@
+#ici on code les règles du jeu et l'interaction avec le joueur
