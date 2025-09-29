@@ -32,3 +32,12 @@ def check_W(board):
                     if (board[i+1][j]==-1 and board[i+1][j+1]==-1 and board[i][j+1]==-1):
                         return -1
     return 0
+
+#cette fonction permet au joueur p (1 ou -1) de placer un pion a la position i, j sur le plateau
+def place_pion(board,i,j,p):
+    if board[i][j]==0:
+        board[i][j]=p
+        return 1
+    else:
+        print("mouvement non autorisé")
+        return 0
