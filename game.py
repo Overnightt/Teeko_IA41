@@ -41,3 +41,19 @@ def place_pion(board,i,j,p):
     else:
         print("mouvement non autorisé")
         return 0
+
+#cette fonction permet au joueur p (1 ou -1) de déplacer un pion qui est a la position i,j dans une direction dir (z=haut, q=gauche,s=bas,d=droite j'avais pas de meilleure idée)
+def move_pion(board,i,j,p,dir):
+    if board[i][j]==p:
+        if dir=="z" and i !=0:
+            board[i][j]=0
+            board[i-1][j]=p
+        if dir=="q" and j !=0:
+            board[i][j]=0
+            board[i][j-1]=p
+        if dir=="s" and i !=4:
+            board[i][j]=0
+            board[i+1][j]=p
+        if dir=="d" and j !=4:
+            board[i][j]=0
+            board[i][j+1]=p
