@@ -58,7 +58,7 @@ def move_pion(board,i,j,p,dir):
             board[i][j]=0
             board[i][j+1]=p
 
-#etabli une liste de mouvement possible
+#etabli une liste de mouvement possible ce sera important pour l'ia
 def move_possible(board,p):
     move = []
     count = 0
