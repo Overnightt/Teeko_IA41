@@ -3,17 +3,17 @@ from game import place_pion
 from game import check_W
 from plateau import board
 from game import move_pion
+from game import move_possible
 
-
-
-board1 = [
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0]
+board = [
+    [ 0,  0,  0,  0,  0],
+    [ 0,  0,  1,  0,  0],
+    [ 0,  0,  1,  0,  0],
+    [ 0, -1,  1,  0,  0],
+    [ 0,  0,  0,  0,  1]
 ]
 
-move_pion(board1,1,4,1,"d")
-for row in board1:
-    print(row)
+print("Possible moves for player 1:")
+print(move_possible(board, 1))
+
+

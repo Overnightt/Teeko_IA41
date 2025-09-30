@@ -57,3 +57,86 @@ def move_pion(board,i,j,p,dir):
         if dir=="d" and j !=4:
             board[i][j]=0
             board[i][j+1]=p
+
+#etabli une liste de mouvement possible
+def move_possible(board,p):
+    move = []
+    count = 0
+    for i in range (5):
+        for j in range (5):
+            if board[i][j]==p:
+                count+=1
+    if count < 4:
+        for i in range (5):
+            for j in range (5):
+                if board[i][j]==0:
+                    move.append((i,j))
+        return move
+    else:
+        for i in range(5):
+            for j in range(5):
+                if board[i][j]==p:
+                    if i==0 and j==0:
+                        if board[i+1][j]==0:
+                            move.append((i,j,"s"))
+                        if board[i][j+1]==0:
+                            move.append((i,j,"d"))
+                    if i==0 and j==4:
+                        if board[i+1][j]==0:
+                            move.append((i,j,"s"))
+                        if board[i][j-1]==0:
+                            move.append((i,j,"q"))
+                    if i==4 and j==0:
+                        if board[i-1][j]==0:
+                            move.append((i,j,"z"))
+                        if board[i][j+1]==0:
+                            move.append((i,j,"d"))
+                    if i==4 and j==4:
+                        if board[i-1][j]==0:
+                            move.append((i,j,"z"))
+                        if board[i][j-1]==0:
+                            move.append((i,j,"q"))
+                    if i==0 and 4>j>0:
+                        if board[i+1][j]==0:
+                            move.append((i,j,"s"))
+                        if board[i][j+1]==0:
+                            move.append((i,j,"d"))
+                        if board[i][j-1]==0:
+                            move.append((i,j,"q"))
+                    if i==4 and 4>j>0:
+                        if board[i-1][j]==0:
+                            move.append((i,j,"z"))
+                        if board[i][j+1]==0:
+                            move.append((i,j,"d"))
+                        if board[i][j-1]==0:
+                            move.append((i,j,"q"))
+                    if 4>i>0 and j==0:
+                        if board[i+1][j]==0:
+                            move.append((i,j,"s"))
+                        if board[i][j+1]==0:
+                            move.append((i,j,"d"))
+                        if board[i-1][j]==0:
+                            move.append((i,j,"z"))
+                    if 4>i>0 and j==4:
+                        if board[i+1][j]==0:
+                            move.append((i,j,"s"))
+                        if board[i-1][j]==0:
+                            move.append((i,j,"z"))
+                        if board[i][j-1]==0:
+                            move.append((i,j,"q"))
+                    if 4>i>0 and 4>j>0:
+                        if board[i+1][j]==0:
+                            move.append((i,j,"s"))
+                        if board[i][j+1]==0:
+                            move.append((i,j,"d"))
+                        if board[i][j-1]==0:
+                            move.append((i,j,"q"))
+                        if board[i-1][j]==0:
+                            move.append((i,j,"z"))
+        return move
+
+                    
+                    
+            
+
+
