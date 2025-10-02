@@ -2,12 +2,10 @@
 
 #fonction qui essayer d'evaluer qui gagne la partie, important pour la logique de l'ia
 def evaluer(board,p):
-    #Récompenses pour alignements partiels et carrés
     #Pénalités pour les menaces de l'adversaire (blocage)
-    #Bonus/malus pour la mobilité et liberté des pions
     score=0
     #a partir de ce moment je me suis rendu compte que les if alait etre ineficace et allait entrainé des problèmes de double comptage, je suis donc passé au vecteur
-    directions=[(1,0),(0,1)]
+    directions=[(1,0),(0,1),(1,1),(1,-1)]
     for i in range(5):
         for j in range(5):
             if board[i][j] == p:
