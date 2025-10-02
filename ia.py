@@ -26,5 +26,18 @@ def evaluer(board,p):
                     if compte==2:
                         score+=100
                     if compte==3:
-                        score+=1000                
+                        score+=1000
+                #voici la partie qui gère les carré
+            if i < 4 and j < 4:
+                if board[i][j] == p and board[i+1][j] == p and board[i][j+1] == p and board[i+1][j+1] == p:
+                    score+=1000
+                elif  board[i][j] == p and board[i+1][j] == p and board[i][j+1] == p:
+                    score+=100
+                elif  board[i][j] == p and board[i+1][j] == p and board[i+1][j+1] == p:
+                    score+=100
+                elif  board[i][j+1] == p and board[i+1][j] == p and board[i+1][j+1] == p:
+                    score+=100
+                elif  board[i][j+1] == p and board[i][j] == p and board[i+1][j+1] == p:
+                    score+=100
+
     return score
