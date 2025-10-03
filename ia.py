@@ -59,7 +59,16 @@ def Minmax_facile(board,p):
                 score_max=move_actuel
                 meilleur_move=i
         elif len(i)==3:
-            return 0 #pour l'instant
+            new_board= copy.deepcopy(board)
+            move_pion(new_board,i[0],i[1],p,i[2])
+            move_actuel=evaluer(new_board,p)-evaluer(new_board,-p)
+            if move_actuel>score_max:
+                score_max=move_actuel
+                meilleur_move=i
     if len(meilleur_move)==2:
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
         return board
+    if len(meilleur_move)==3:
+        move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
+        return board
+
