@@ -1,8 +1,12 @@
 #ici on code la logique de l'IA
-
+from game import place_pion
+from game import check_W
+from plateau import board
+from game import move_pion
+from game import move_possible
+import copy
 #fonction qui essayer d'evaluer qui gagne la partie, important pour la logique de l'ia
 def evaluer(board,p):
-    #Pénalités pour les menaces de l'adversaire (blocage)
     score=0
     #a partir de ce moment je me suis rendu compte que les if alait etre ineficace et allait entrainé des problèmes de double comptage, je suis donc passé au vecteur
     directions=[(1,0),(0,1),(1,1),(1,-1)]
@@ -39,5 +43,23 @@ def evaluer(board,p):
                     score+=100
                 elif  board[i][j+1] == p and board[i][j] == p and board[i+1][j+1] == p:
                     score+=100
-
     return score
+
+#fonction de minmax qui renvoit le plateau avec le meilleur mouvement appliqué sans se soucier des mouvements possibles de l'adversaire
+def Minmax_facile(board,p):
+    score_max=-1000000
+    meilleur_move=()
+    l=move_possible(board,p)
+    for i in l:
+        if len(i)==2:
+            new_board= copy.deepcopy(board)
+            place_pion(new_board,i[0],i[1],p)
+            move_actuel=evaluer(new_board,p)-evaluer(new_board,-p)
+            if move_actuel>score_max:
+                score_max=move_actuel
+                meilleur_move=i
+        elif len(i)==3:
+            return 0 #pour l'instant
+    if len(meilleur_move)==2:
+        place_pion(board,meilleur_move[0],meilleur_move[1],p)
+        return board

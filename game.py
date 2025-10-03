@@ -37,7 +37,7 @@ def check_W(board):
 def place_pion(board,i,j,p):
     if board[i][j]==0:
         board[i][j]=p
-        return 1
+        return board
     else:
         print("mouvement non autorisé")
         return 0
