@@ -72,3 +72,4 @@ def Minmax_facile(board,p):
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
         return board
 
+def Minmax_moyen(board,p):

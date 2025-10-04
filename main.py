@@ -10,11 +10,11 @@ import copy
 
 
 board = [
-    [ 0,  0,  0,  0,  -1],
-    [ 0,  0,  0,  1,  0],
+    [ 0,   0,  1,  0,  -1],
+    [ 0,   0,  1,  0,  0],
+    [ 0,  -1,  1,  0,  0],
     [ 0,  -1,  0,  1,  0],
-    [ 0, -1,  0,  1,  0],
-    [ 0,  -1,  0,  0,  1]
+    [ 0,  -1,  0,  0,  0]
 ]
 
 # Print the board nicely
@@ -28,12 +28,12 @@ print("Evaluation for player 1:", evaluer(board, 1))
 print("Evaluation for player -1:", evaluer(board, -1))
 
 # Test Minmax_facile
-print("Board before Minmax_facile:")
+print("Plato avant ia")
 print_board(board)
 
 Minmax_facile(board, 1)  # directly modifies 'board'
 
-print("Board after Minmax_facile (player 1):")
+print("Plato après ia:")
 print_board(board)
 
 
