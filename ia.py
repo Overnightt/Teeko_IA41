@@ -45,7 +45,8 @@ def evaluer(board,p):
                     score+=100
     return score
 
-#fonction de minmax qui renvoit le plateau avec le meilleur mouvement appliqué sans se soucier des mouvements possibles de l'adversaire
+#fonction de minmax qui renvoit le plateau avec le meilleur mouvement appliqué sans se soucier des 
+#mouvements possibles de l'adversaire
 def Minmax_facile(board,p):
     score_max=-1000000
     meilleur_move=()
@@ -72,4 +73,40 @@ def Minmax_facile(board,p):
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
         return board
 
+#fonction de minmax qui renvoit le plateau avec le meilleur mouvement appliqué mais qui cette fois ci
+#après avoir effectuer un mouvement regarde le pire des cas , c'est a dire le meilleur mouvement que
+#l'ennemi peut faire et no le score, le mouvement qui entraine le pire des cas avec le score le plus élevé
+#c'est a dire celui qui entraine un plateau le plus a l'avantage de l'ia, sera choisi
 def Minmax_moyen(board,p):
+    score_max=-1000000
+    meilleur_move=()
+    l=move_possible(board,p)
+    for i in l:
+        if len(i)==2:
+            new_board= copy.deepcopy(board)
+            place_pion(new_board,i[0],i[1],p)
+            l2=move_possible(new_board,-p)
+            pire_cas=1000000
+            for j in l2:
+                new_board2=copy.deepcopy(new_board)
+                place_pion(new_board2,j[0],j[1],-p)
+                move_actuel=evaluer(new_board2,p)-evaluer(new_board2,-p)
+                if move_actuel<pire_cas:
+                    pire_cas=move_actuel
+            if pire_cas>score_max:
+                score_max=pire_cas
+                meilleur_move=i
+        elif len(i)==3:
+            return 0
+            #new_board= copy.deepcopy(board)
+            #move_pion(new_board,i[0],i[1],p,i[2])
+            #move_actuel=evaluer(new_board,p)-evaluer(new_board,-p)
+            #if move_actuel>score_max:
+             #   score_max=move_actuel
+              #  meilleur_move=i
+    if len(meilleur_move)==2:
+        place_pion(board,meilleur_move[0],meilleur_move[1],p)
+        return board
+    if len(meilleur_move)==3:
+        move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
+        return board
