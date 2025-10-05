@@ -85,6 +85,10 @@ def Minmax_moyen(board,p):
         if len(i)==2:
             new_board= copy.deepcopy(board)
             place_pion(new_board,i[0],i[1],p)
+            #ici je m'assure que si le mouvement fait gagner la partie alors il sera toujours pris
+            if check_W(new_board):  
+                meilleur_move=i
+                return place_pion(board,i[0],i[1],p)
             l2=move_possible(new_board,-p)
             pire_cas=1000000
             for j in l2:
@@ -97,13 +101,23 @@ def Minmax_moyen(board,p):
                 score_max=pire_cas
                 meilleur_move=i
         elif len(i)==3:
-            return 0
-            #new_board= copy.deepcopy(board)
-            #move_pion(new_board,i[0],i[1],p,i[2])
-            #move_actuel=evaluer(new_board,p)-evaluer(new_board,-p)
-            #if move_actuel>score_max:
-             #   score_max=move_actuel
-              #  meilleur_move=i
+            new_board= copy.deepcopy(board)
+            move_pion(new_board,i[0],i[1],p,i[2])
+            #ici aussi je m'assure que si le mouvement fait gagner la partie alors il sera toujours pris
+            if check_W(new_board):
+                meilleur_move=i
+                return move_pion(board,i[0],i[1],p,i[2])
+            l2=move_possible(new_board,-p)
+            pire_cas=1000000
+            for j in l2:
+                new_board2=copy.deepcopy(new_board)
+                move_pion(new_board2,j[0],j[1],-p,j[2])
+                move_actuel=evaluer(new_board2,p)-evaluer(new_board2,-p)
+                if move_actuel<pire_cas:
+                    pire_cas=move_actuel
+            if pire_cas>score_max:
+                score_max=pire_cas
+                meilleur_move=i
     if len(meilleur_move)==2:
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
         return board

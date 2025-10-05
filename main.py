@@ -11,11 +11,11 @@ import copy
 
 
 board = [
+    [ 0,   -1,  1,  0,  0],
+    [ 0,   0,  0,  0,  -1],
     [ 0,   0,  1,  0,  0],
-    [ 0,   0,  1,  0,  0],
-    [ 0,  -1,  0,  0,  0],
-    [ 0,  -1,  0,  0,  0],
-    [ 0,  -1,  0,  0,  0]
+    [ 0,  -1,  0,  1,  0],
+    [ 1,  -1,  0,  0,  0]
 ]
 
 def print_board(b):
@@ -24,7 +24,7 @@ def print_board(b):
     print()
 
 
-# Test Minmax_facile
+# Test Minmax_Moyen
 print("Plato avant ia")
 print_board(board)
 
