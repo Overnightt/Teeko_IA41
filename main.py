@@ -10,27 +10,17 @@ from ia import Minmax_moyen
 import copy
 
 
-board = [
-    [ 0,   -1,  1,  0,  0],
-    [ 0,   0,  0,  0,  -1],
-    [ 0,   0,  1,  0,  0],
-    [ 0,  -1,  0,  1,  0],
-    [ 1,  -1,  0,  0,  0]
-]
 
 def print_board(b):
     for row in b:
         print(row)
     print()
 
+def jouer_partie():
+    plat0=plateau.board
+    while not check_W(plat0):
 
-# Test Minmax_Moyen
-print("Plato avant ia")
-print_board(board)
 
-Minmax_moyen(board, 1) 
 
-print("Plato après ia:")
-print_board(board)
 
 
