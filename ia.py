@@ -75,7 +75,7 @@ def Minmax_facile(board,p):
 
 #fonction de minmax qui renvoit le plateau avec le meilleur mouvement appliqué mais qui cette fois ci
 #après avoir effectuer un mouvement regarde le pire des cas , c'est a dire le meilleur mouvement que
-#l'ennemi peut faire et no le score, le mouvement qui entraine le pire des cas avec le score le plus élevé
+#l'ennemi peut faire et note le score, le mouvement qui entraine le pire des cas avec le score le plus élevé
 #c'est a dire celui qui entraine un plateau le plus a l'avantage de l'ia, sera choisi
 def Minmax_moyen(board,p):
     score_max=-1000000
