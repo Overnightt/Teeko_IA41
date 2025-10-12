@@ -130,11 +130,60 @@ def Minmax_moyen(board,p):
 # dans les limites de ma machine bien sur. Afin de ne pas faire un programme avec trop de if, j'ai decidé de
 #faire un programme recursif ou l'on peut choisir le nombre de coup dans le futur analysé par l'ia.
 
+#------Work In Progress--------#
 def Minmax_Ultime_Algo(board,p,predi):
     if predi==0 or check_W(board):
         return evaluer(board,p)-evaluer(board,-p)
+    else:
+        score_max=-100000
+        l=move_possible(board,p)
+        meilleur_move=()
+        for i in l:
+            if len(i)==2:
+                new_board= copy.deepcopy(board)
+                place_pion(new_board,i[0],i[1],p)
+                score= Minmax_Ultime_Algo(new_board,-p,predi-1)
+                if score > score_max:
+                    score_max=score
+                    meilleur_move=i
+            if len(i)==3:
+                new_board= copy.deepcopy(board)
+                move_pion(new_board,i[0],i[1],p,i[2])
+                score= Minmax_Ultime_Algo(new_board,-p,predi-1)
+                if score > score_max:
+                    score_max=score
+                    meilleur_move=i
+
 
 def Minmax_Ultime(board,p,predi):
-    score_max=evaluer(board,p)
-    meilleur_move=()      
+    score_max=-1000000
+    meilleur_move=()
+    l=move_possible(board,p)
+    for i in l:
+        if len(i)==2:
+            new_board= copy.deepcopy(board)
+            place_pion(new_board,i[0],i[1],p)
+            if check_W(new_board):  
+                meilleur_move=i
+                return place_pion(board,i[0],i[1],p)
+            score = Minmax_Ultime_Algo(new_board,-p,predi-1)
+            if score > score_max:
+                score_max=score
+                meilleur_move=i
+        if len(i)==3:
+            new_board= copy.deepcopy(board)
+            move_pion(new_board,i[0],i[1],p,i[2])
+            if check_W(new_board):
+                meilleur_move=i
+                return move_pion(board,i[0],i[1],p,i[2])
+                    score = Minmax_Ultime_Algo(new_board,-p,predi-1)
+            if score > score_max:
+                score_max=score
+                meilleur_move=i
+    if len(meilleur_move)==2:
+        place_pion(board,meilleur_move[0],meilleur_move[1],p)
+        return board
+    if len(meilleur_move)==3:
+        move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
+        return board
 
