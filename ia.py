@@ -124,3 +124,17 @@ def Minmax_moyen(board,p):
     if len(meilleur_move)==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
         return board
+
+#après avoir créer deux algorithme basique qui m'on permis de comprendre le concept du minmax j'ai eu l'idée
+#j'avais envie de faire un algorithme capable de regarder le plus loin dans le futur (coups possible) possible
+# dans les limites de ma machine bien sur. Afin de ne pas faire un programme avec trop de if, j'ai decidé de
+#faire un programme recursif ou l'on peut choisir le nombre de coup dans le futur analysé par l'ia.
+
+def Minmax_Ultime_Algo(board,p,predi):
+    if predi==0 or check_W(board):
+        return evaluer(board,p)-evaluer(board,-p)
+
+def Minmax_Ultime(board,p,predi):
+    score_max=evaluer(board,p)
+    meilleur_move=()      
+

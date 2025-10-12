@@ -40,7 +40,8 @@ def jouer_partie():
                     Minmax_facile(plat0,ia)
                 if dif == 1:
                     Minmax_moyen(plat0,ia)
-
+        elif count == 4:
+            return 0     
 
 
 jouer_partie()
