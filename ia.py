@@ -88,7 +88,8 @@ def Minmax_moyen(board,p):
             #ici je m'assure que si le mouvement fait gagner la partie alors il sera toujours pris
             if check_W(new_board):  
                 meilleur_move=i
-                return place_pion(board,i[0],i[1],p)
+                place_pion(board,i[0],i[1],p)
+                return board
             l2=move_possible(new_board,-p)
             pire_cas=1000000
             for j in l2:
@@ -106,7 +107,8 @@ def Minmax_moyen(board,p):
             #ici aussi je m'assure que si le mouvement fait gagner la partie alors il sera toujours pris
             if check_W(new_board):
                 meilleur_move=i
-                return move_pion(board,i[0],i[1],p,i[2])
+                move_pion(board,i[0],i[1],p,i[2])
+                return board
             l2=move_possible(new_board,-p)
             pire_cas=1000000
             for j in l2:
@@ -135,7 +137,8 @@ def Minmax_Ultime_Algo(board,p,predi):
     if predi==0 or check_W(board):
         return evaluer(board,p)-evaluer(board,-p)
     else:
-        score_max=-100000
+        score_max=-1000000
+        pire cas=1000000
         l=move_possible(board,p)
         meilleur_move=()
         for i in l:
@@ -143,15 +146,21 @@ def Minmax_Ultime_Algo(board,p,predi):
                 new_board= copy.deepcopy(board)
                 place_pion(new_board,i[0],i[1],p)
                 score= Minmax_Ultime_Algo(new_board,-p,predi-1)
-                if score > score_max:
+                if score > score_max and p==1:
                     score_max=score
+                    meilleur_move=i
+                if pire_cas > score and p==-1:
+                    pire_cas=score
                     meilleur_move=i
             if len(i)==3:
                 new_board= copy.deepcopy(board)
                 move_pion(new_board,i[0],i[1],p,i[2])
                 score= Minmax_Ultime_Algo(new_board,-p,predi-1)
-                if score > score_max:
+                if score > score_max and p==1:
                     score_max=score
+                    meilleur_move=i
+                if pire_cas > score and p==-1:
+                    pire_cas=score
                     meilleur_move=i
 
 
@@ -165,7 +174,8 @@ def Minmax_Ultime(board,p,predi):
             place_pion(new_board,i[0],i[1],p)
             if check_W(new_board):  
                 meilleur_move=i
-                return place_pion(board,i[0],i[1],p)
+                place_pion(board,i[0],i[1],p)
+                return board
             score = Minmax_Ultime_Algo(new_board,-p,predi-1)
             if score > score_max:
                 score_max=score
@@ -175,8 +185,9 @@ def Minmax_Ultime(board,p,predi):
             move_pion(new_board,i[0],i[1],p,i[2])
             if check_W(new_board):
                 meilleur_move=i
-                return move_pion(board,i[0],i[1],p,i[2])
-                    score = Minmax_Ultime_Algo(new_board,-p,predi-1)
+                move_pion(board,i[0],i[1],p,i[2])
+                return board
+            score = Minmax_Ultime_Algo(new_board,-p,predi-1)
             if score > score_max:
                 score_max=score
                 meilleur_move=i
