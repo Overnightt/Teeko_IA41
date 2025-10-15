@@ -130,7 +130,9 @@ def Minmax_moyen(board,p):
 #après avoir créer deux algorithme basique qui m'on permis de comprendre le concept du minmax j'ai eu l'idée
 #j'avais envie de faire un algorithme capable de regarder le plus loin dans le futur (coups possible) possible
 # dans les limites de ma machine bien sur. Afin de ne pas faire un programme avec trop de if, j'ai decidé de
-#faire un programme recursif ou l'on peut choisir le nombre de coup dans le futur analysé par l'ia.
+#faire un programme recursif ou l'on peut choisir le nombre de coup dans le futur analysé par l'ia. Le programme
+#est divisé en 2 partie, une qui s'occupe de la recursivité et l'autre de l'initialisation et de l'application
+#des mouvements
 
 #------Work In Progress--------#
 def Minmax_Ultime_Algo(board,p,predi):
@@ -138,7 +140,7 @@ def Minmax_Ultime_Algo(board,p,predi):
         return evaluer(board,p)-evaluer(board,-p)
     else:
         score_max=-1000000
-        pire cas=1000000
+        pire_cas=1000000
         l=move_possible(board,p)
         meilleur_move=()
         for i in l:
@@ -162,6 +164,10 @@ def Minmax_Ultime_Algo(board,p,predi):
                 if pire_cas > score and p==-1:
                     pire_cas=score
                     meilleur_move=i
+        if p==1:
+            return score_max
+        if p==-1:
+            return pire_cas
 
 
 def Minmax_Ultime(board,p,predi):

@@ -8,7 +8,8 @@ from ia import evaluer
 from ia import Minmax_facile
 from ia import Minmax_moyen
 import copy
-
+from ia import Minmax_Ultime
+from ia import Minmax_Ultime_Algo
 
 
 def print_board(b):
@@ -18,7 +19,7 @@ def print_board(b):
 
 def jouer_partie():
     plat0= board
-    dif=int(input("veullez choisir votre dificulté (0:trés facile 1:moyen):"))
+    dif=int(input("veullez choisir votre dificulté (0:trés facile 1:moyen 2:test):"))
     while not check_W(plat0):
         humain=-1
         ia=1
@@ -40,6 +41,8 @@ def jouer_partie():
                     Minmax_facile(plat0,ia)
                 if dif == 1:
                     Minmax_moyen(plat0,ia)
+                if dif ==2:
+                    Minmax_Ultime(plat0,ia,3)
         elif count == 4:
             return 0     
 
