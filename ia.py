@@ -1,7 +1,6 @@
 #ici on code la logique de l'IA
 from game import place_pion
 from game import check_W
-from plateau import board
 from game import move_pion
 from game import move_possible
 import copy

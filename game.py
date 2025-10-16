@@ -1,5 +1,5 @@
 #ici on code les règles du jeu et l'interaction avec le joueur
-from plateau import board
+
 
 #cette fonction detecte si une condition de victoire est remplie et par quel joueur elle a été remplie
 def check_W(board):
