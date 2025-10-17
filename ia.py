@@ -7,7 +7,6 @@ import copy
 #fonction qui essayer d'evaluer qui gagne la partie, important pour la logique de l'ia
 def evaluer(board,p):
     score=0
-    #a partir de ce moment je me suis rendu compte que les if alait etre ineficace et allait entrainé des problèmes de double comptage, je suis donc passé au vecteur
     directions=[(1,0),(0,1),(1,1),(1,-1)]
     for i in range(5):
         for j in range(5):
@@ -22,6 +21,7 @@ def evaluer(board,p):
                             ni+=di
                             nj+=dj
                         else:
+
                             break
                     #en attribuant des mutiple de dix de plus en plus grand au score j'espere annuler le probleme de double comptage
                     if compte==1:
