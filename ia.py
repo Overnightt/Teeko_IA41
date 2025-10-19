@@ -4,6 +4,17 @@ from game import check_W
 from game import move_pion
 from game import move_possible
 import copy
+from functools import lru_cache #trés important
+
+#ici on etablie les recompense pour le controle d'un case centrale car celles ci sont plus importantes
+#car plus de combinaison sont possible quand celles ci sont controlées
+recompense_central =[
+[1,2,3,2,1],
+[2,4,6,4,2],
+[3,6,10,6,2],
+[2,4,6,4,2],
+[1,2,3,2,1],
+]
 #fonction qui essayer d'evaluer qui gagne la partie, important pour la logique de l'ia
 def evaluer(board,p):
     score=0
@@ -11,6 +22,7 @@ def evaluer(board,p):
     for i in range(5):
         for j in range(5):
             if board[i][j] == p:
+                score +=recompense_central[i][j]
                 for di,dj in directions:
                     ni=i+di
                     nj=j+dj
@@ -134,6 +146,7 @@ def Minmax_moyen(board,p):
 #des mouvements
 
 #------Work In Progress--------#
+@lru_cache(maxsize=None)
 def Minmax_Ultime_Algo(board,p,predi):
     if predi==0 or check_W(board):
         return evaluer(board,p)-evaluer(board,-p)
@@ -144,9 +157,10 @@ def Minmax_Ultime_Algo(board,p,predi):
         meilleur_move=()
         for i in l:
             if len(i)==2:
-                new_board= copy.deepcopy(board)
+                new_board= [list(row) for row in board]
                 place_pion(new_board,i[0],i[1],p)
-                score= Minmax_Ultime_Algo(new_board,-p,predi-1)
+                usable_board=tuple(tuple(row) for row in new_board)
+                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
                 if score > score_max and p==1:
                     score_max=score
                     meilleur_move=i
@@ -154,9 +168,10 @@ def Minmax_Ultime_Algo(board,p,predi):
                     pire_cas=score
                     meilleur_move=i
             if len(i)==3:
-                new_board= copy.deepcopy(board)
+                new_board= [list(row) for row in board]
                 move_pion(new_board,i[0],i[1],p,i[2])
-                score= Minmax_Ultime_Algo(new_board,-p,predi-1)
+                usable_board=tuple(tuple(row) for row in new_board)
+                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
                 if score > score_max and p==1:
                     score_max=score
                     meilleur_move=i
@@ -181,7 +196,8 @@ def Minmax_Ultime(board,p,predi):
                 meilleur_move=i
                 place_pion(board,i[0],i[1],p)
                 return board
-            score = Minmax_Ultime_Algo(new_board,-p,predi-1)
+            usable_board=tuple(tuple(row) for row in new_board)
+            score = Minmax_Ultime_Algo(usable_board,-p,predi-1)
             if score > score_max:
                 score_max=score
                 meilleur_move=i
@@ -192,7 +208,8 @@ def Minmax_Ultime(board,p,predi):
                 meilleur_move=i
                 move_pion(board,i[0],i[1],p,i[2])
                 return board
-            score = Minmax_Ultime_Algo(new_board,-p,predi-1)
+            usable_board=tuple(tuple(row) for row in new_board)
+            score = Minmax_Ultime_Algo(usable_board,-p,predi-1)
             if score > score_max:
                 score_max=score
                 meilleur_move=i
