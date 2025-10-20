@@ -149,7 +149,7 @@ def Minmax_moyen(board,p):
 @lru_cache(maxsize=None)
 def Minmax_Ultime_Algo(board,p,predi):
     if predi==0 or check_W(board):
-        return evaluer(board,p)-evaluer(board,-p)
+        return p*(evaluer(board,p)-evaluer(board,-p))
     else:
         score_max=-1000000
         pire_cas=1000000
