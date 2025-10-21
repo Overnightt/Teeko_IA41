@@ -145,7 +145,7 @@ def Minmax_moyen(board,p):
 #est divisé en 2 partie, une qui s'occupe de la recursivité et l'autre de l'initialisation et de l'application
 #des mouvements
 
-#------Work In Progress--------#
+#------Done--------#
 @lru_cache(maxsize=None)
 def Minmax_Ultime_Algo(board,p,predi):
     if predi==0 or check_W(board):
@@ -154,7 +154,6 @@ def Minmax_Ultime_Algo(board,p,predi):
         score_max=-1000000
         pire_cas=1000000
         l=move_possible(board,p)
-        meilleur_move=()
         for i in l:
             if len(i)==2:
                 new_board= [list(row) for row in board]
@@ -163,10 +162,8 @@ def Minmax_Ultime_Algo(board,p,predi):
                 score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
                 if score > score_max and p==1:
                     score_max=score
-                    meilleur_move=i
                 if pire_cas > score and p==-1:
                     pire_cas=score
-                    meilleur_move=i
             if len(i)==3:
                 new_board= [list(row) for row in board]
                 move_pion(new_board,i[0],i[1],p,i[2])
@@ -174,10 +171,8 @@ def Minmax_Ultime_Algo(board,p,predi):
                 score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
                 if score > score_max and p==1:
                     score_max=score
-                    meilleur_move=i
                 if pire_cas > score and p==-1:
                     pire_cas=score
-                    meilleur_move=i
         if p==1:
             return score_max
         if p==-1:
@@ -220,3 +215,9 @@ def Minmax_Ultime(board,p,predi):
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
         return board
 
+#------WORK IN PROGRESS !--------#
+def AlphaBeta(board,p,predi):
+
+
+@lru_cache(maxsize=None)
+def AlphaBeta_Algo(board,p,predi,alpha,beta):
