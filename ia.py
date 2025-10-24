@@ -216,8 +216,8 @@ def Minmax_Ultime(board,p,predi):
         return board
 
 #------WORK IN PROGRESS !--------#
-def AlphaBeta(board,p,predi):
+#def AlphaBeta(board,p,predi):
 
 
-@lru_cache(maxsize=None)
-def AlphaBeta_Algo(board,p,predi,alpha,beta):
+#@lru_cache(maxsize=None)
+#def AlphaBeta_Algo(board,p,predi,alpha,beta):
