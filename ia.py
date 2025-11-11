@@ -187,7 +187,6 @@ def Minmax_Ultime(board,p,predi):
 
 #------WORK IN PROGRESS !--------#
 def AlphaBeta(board,p,predi):
-    print("predi est",predi)
     alpha=-100000000
     beta=1000000000
     meilleur_move=()
@@ -229,7 +228,6 @@ def AlphaBeta(board,p,predi):
 
 
 def AlphaBeta_Algo(board, p, predi, alpha, beta):
-    print("predi est",predi)
     if predi == 0 or check_W(board):
         eval_score = p * (evaluer(board, p) - evaluer(board, -p))
         return eval_score
