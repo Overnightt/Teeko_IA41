@@ -6,7 +6,6 @@ from game import move_pion
 from game import move_possible
 from ia import evaluer
 from ia import Minmax_facile
-from ia import Minmax_moyen
 import copy
 from ia import Minmax_Ultime
 from ia import Minmax_Ultime_Algo

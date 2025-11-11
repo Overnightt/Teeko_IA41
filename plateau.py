@@ -7,7 +7,7 @@ import pygame
 import sys
 import copy
 import game
-from ia import Minmax_facile, Minmax_moyen, Minmax_Ultime
+from ia import Minmax_facile, Minmax_Ultime, AlphaBeta
 
 # plateau partagé (main.py importe `board` depuis ici)
 board = [[0 for _ in range(5)] for __ in range(5)]
@@ -119,9 +119,9 @@ def draw_ui(surface, difficulty, game_over, winner, font, bigfont):
 
 def menu_loop(screen, clock, font, bigfont):
     title = bigfont.render("Teeko - Choisir la difficulté", True, TXT)
-    b_easy = Button((MARGIN, 150, 160, 40), "Facile (0)", font)
-    b_med = Button((MARGIN+180, 150, 160, 40), "Moyen (1)", font)
-    b_ult = Button((MARGIN+360, 150, 160, 40), "Ultime (2)", font)
+    b_easy = Button((MARGIN, 150, 160, 40), "Entrainement", font)
+    b_med = Button((MARGIN+180, 150, 160, 40), "Alpha Beta", font)
+    b_ult = Button((MARGIN+360, 150, 160, 40), "Minmax", font)
     b_quit = Button((MARGIN+180, 220, 160, 40), "Quitter", font)
 
     # sélection de la profondeur pour Ultime
@@ -168,7 +168,7 @@ def menu_loop(screen, clock, font, bigfont):
         screen.blit(title, (MARGIN, 40))
         b_easy.draw(screen); b_med.draw(screen); b_ult.draw(screen); b_quit.draw(screen)
 
-        info = font.render("Choisissez le profondeur pour Ultime (3-4 sinon crash): ", True, TXT) 
+        info = font.render("Choisissez le profondeur pour l'IA (3-4 sinon crash): ", True, TXT) 
         screen.blit(info, (MARGIN, 300)) 
         box = pygame.Rect(MARGIN, 330, 120, 32) 
         pygame.draw.rect(screen, (255,255,255), box) 
@@ -264,7 +264,7 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
                                 if difficulty == 0:
                                     Minmax_facile(board, IA)
                                 elif difficulty == 1:
-                                    Minmax_moyen(board, IA)
+                                    AlphaBeta(board, IA, depth)
                                 else:
                                     Minmax_Ultime(board, IA, depth)
                                 if game.check_W(board):
@@ -291,7 +291,7 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
                                     if difficulty == 0:
                                         Minmax_facile(board, IA)
                                     elif difficulty == 1:
-                                        Minmax_moyen(board, IA)
+                                        AlphaBeta(board, IA, depth)
                                     else:
                                         Minmax_Ultime(board, IA, depth)
                                     if game.check_W(board):
