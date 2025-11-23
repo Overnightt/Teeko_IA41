@@ -101,14 +101,14 @@ def Minmax_facile(board,p):
 #------Done--------#
 @lru_cache(maxsize=None)
 def Minmax_Ultime_Algo(board,p,predi):
-    if predi==0 or check_W(board):
+    if predi==0 or check_W!=0:
         return p*(evaluer(board,p)-evaluer(board,-p))
     else:
         score_max=-1000000
         pire_cas=1000000
         l=move_possible(board,p)
-        n=len(i)
         for i in l:
+            n=len(i)
             if n==2:
                 new_board= [list(row) for row in board]
                 place_pion(new_board,i[0],i[1],p)
@@ -137,8 +137,8 @@ def Minmax_Ultime(board,p,predi):
     score_max=-1000000
     meilleur_move=()
     l=move_possible(board,p)
-    n=len(i)
     for i in l:
+        n=len(i)
         if n==2:
             new_board= copy.deepcopy(board)
             place_pion(new_board,i[0],i[1],p)
@@ -174,6 +174,7 @@ def Minmax_Ultime(board,p,predi):
 def AlphaBeta(board,p,predi):
     alpha=-100000000 #equivalent a -inf
     beta=1000000000  #equivalent a +inf
+    best_score= -100000000 #equivalent a -inf
     meilleur_move=() 
     l=move_possible(board,p)
     for i in l:
@@ -183,21 +184,17 @@ def AlphaBeta(board,p,predi):
             place_pion(new_board,i[0],i[1],p)
             usable_board=tuple(tuple(row) for row in new_board)
             score = AlphaBeta_Algo(usable_board,-p,predi-1,alpha,beta)
-            if score > alpha: #pas compris
-                alpha=score
+            if score > best_score:
+                best_score = score
                 meilleur_move=i
-                if alpha >= beta:
-                    break
         if n==3:
             new_board= [list(row) for row in board]
             move_pion(new_board,i[0],i[1],p,i[2])
             usable_board=tuple(tuple(row) for row in new_board)
             score = AlphaBeta_Algo(usable_board,-p,predi-1,alpha,beta)
-            if score > alpha:  #pas compris
-                alpha=score
+            if score > best_score:
+                best_score = score
                 meilleur_move=i
-                if alpha >= beta:
-                    break
     if n==2:
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
     if n==3:
@@ -207,7 +204,7 @@ def AlphaBeta(board,p,predi):
 
 
 def AlphaBeta_Algo(board, p, predi, alpha, beta):
-    if predi == 0 or check_W(board):
+    if predi == 0 or check_W(board)!=0 :
         eval_score =p*(evaluer(board,p)-evaluer(board,-p))
         return eval_score
     l = move_possible(board, p)
@@ -220,20 +217,20 @@ def AlphaBeta_Algo(board, p, predi, alpha, beta):
                 place_pion(new_board, i[0], i[1], p)
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
-                val = max(val, score)
-                alpha = max(alpha, val)
+                val=max(score,val)
+                alpha=max(alpha,val)
                 if alpha >= beta:
-                    break
+                    return alpha    
             elif n == 3:
                 new_board = [list(row) for row in board]
                 move_pion(new_board, i[0], i[1], p, i[2])
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
-                val = max(val, score)
-                alpha = max(alpha, val)
+                val=max(score,val)
+                alpha=max(alpha,val)
                 if alpha >= beta:
-                    break
-        return val    
+                    return alpha
+        return val
     else:  
         val = 100000000
         for i in l:
@@ -243,17 +240,17 @@ def AlphaBeta_Algo(board, p, predi, alpha, beta):
                 place_pion(new_board, i[0], i[1], p)
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
-                val = min(val, score)
-                beta = min(beta, val)
+                val=min(score,val)
+                beta=min(beta,val)
                 if alpha >= beta:
-                    break
+                    return beta
             elif n == 3:
                 new_board = [list(row) for row in board]
                 move_pion(new_board, i[0], i[1], p, i[2])
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
-                val = min(val, score)
-                beta = min(beta, val)
+                val=min(score,val)
+                beta=min(beta,val)
                 if alpha >= beta:
-                    break
+                    return beta
         return val
