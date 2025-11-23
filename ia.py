@@ -148,6 +148,38 @@ def Minmax_Ultime_Algo(board,p,predi):
         if p==-1:
             return pire_cas
 
+@lru_cache(maxsize=None)
+def Revert_Minmax_Ultime_Algo(board,p,predi):
+    if predi==0 or check_W(board):
+        return p*(evaluer(board,p)-evaluer(board,-p))
+    else:
+        score_max=-1000000
+        pire_cas=1000000
+        l=move_possible(board,p)
+        for i in l:
+            if len(i)==2:
+                new_board= [list(row) for row in board]
+                place_pion(new_board,i[0],i[1],p)
+                usable_board=tuple(tuple(row) for row in new_board)
+                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
+                if score > score_max and p==-1:
+                    score_max=score
+                if pire_cas > score and p==1:
+                    pire_cas=score
+            if len(i)==3:
+                new_board= [list(row) for row in board]
+                move_pion(new_board,i[0],i[1],p,i[2])
+                usable_board=tuple(tuple(row) for row in new_board)
+                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
+                if score > score_max and p==-1:
+                    score_max=score
+                if pire_cas > score and p==1:
+                    pire_cas=score
+        if p==-1:
+            return score_max
+        if p==1:
+            return pire_cas
+
 
 def Minmax_Ultime(board,p,predi):
     score_max=-1000000
@@ -175,6 +207,42 @@ def Minmax_Ultime(board,p,predi):
                 return board
             usable_board=tuple(tuple(row) for row in new_board)
             score = Minmax_Ultime_Algo(usable_board,-p,predi-1)
+            if score > score_max:
+                score_max=score
+                meilleur_move=i
+    if len(meilleur_move)==2:
+        place_pion(board,meilleur_move[0],meilleur_move[1],p)
+        return board
+    if len(meilleur_move)==3:
+        move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
+        return board
+
+def Revert_Minmax_Ultime(board,p,predi):
+    score_max=-1000000
+    meilleur_move=()
+    l=move_possible(board,p)
+    for i in l:
+        if len(i)==2:
+            new_board= copy.deepcopy(board)
+            place_pion(new_board,i[0],i[1],p)
+            if check_W(new_board):  
+                meilleur_move=i
+                place_pion(board,i[0],i[1],p)
+                return board
+            usable_board=tuple(tuple(row) for row in new_board)
+            score = Revert_Minmax_Ultime_Algo(usable_board,-p,predi-1)
+            if score > score_max:
+                score_max=score
+                meilleur_move=i
+        if len(i)==3:
+            new_board= copy.deepcopy(board)
+            move_pion(new_board,i[0],i[1],p,i[2])
+            if check_W(new_board):
+                meilleur_move=i
+                move_pion(board,i[0],i[1],p,i[2])
+                return board
+            usable_board=tuple(tuple(row) for row in new_board)
+            score = Revert_Minmax_Ultime_Algo(usable_board,-p,predi-1)
             if score > score_max:
                 score_max=score
                 meilleur_move=i

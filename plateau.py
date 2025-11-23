@@ -8,7 +8,7 @@ import sys
 import copy
 import time
 import game
-from ia import Minmax_facile, Minmax_Ultime, AlphaBeta
+from ia import Minmax_facile, Minmax_Ultime, AlphaBeta,Revert_Minmax_Ultime
 
 # plateau partagé (main.py importe `board` depuis ici)
 board = [[0 for _ in range(5)] for __ in range(5)]
@@ -302,6 +302,8 @@ def apply_ai_move_by_name(name, board_ref, player, depth):
         AlphaBeta(board_ref, player, depth)
     elif name == "Minmax":
         Minmax_Ultime(board_ref, player, depth)
+    elif name == "Minmax_":
+        Revert_Minmax_Ultime(board_ref, player, depth)
     else:
         # fallback
         Minmax_facile(board_ref, player)
@@ -335,8 +337,8 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
     ia_pairs = [
         ("Facile","Facile"),
         ("AlphaBeta","AlphaBeta"),
-        ("Minmax","Minmax"),
-        ("AlphaBeta","Minmax"),
+        ("Minmax","Minmax_"),
+        ("AlphaBeta","Minmax_"),
         ("Minmax","AlphaBeta"),
     ]
     # if menu provided an ia_pair, set the index accordingly
@@ -485,6 +487,8 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
                     AlphaBeta(board, current_player, depth)
                 elif ai_name == "Minmax":
                     Minmax_Ultime(board, current_player, depth)
+                elif ai_name == "Minmax_":
+                    Revert_Minmax_Ultime(board, current_player, depth)
                 else:
                     Minmax_facile(board, current_player)
 
