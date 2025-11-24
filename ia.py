@@ -171,6 +171,7 @@ def Minmax_Ultime(board,p,predi):
         return board
 
 #------WORK IN PROGRESS !--------#
+
 def AlphaBeta(board,p,predi):
     alpha=-100000000 #equivalent a -inf
     beta=1000000000  #equivalent a +inf
@@ -205,7 +206,7 @@ def AlphaBeta(board,p,predi):
     return board
 
 
-
+@lru_cache(maxsize=None)
 def AlphaBeta_Algo(board, p, predi, alpha, beta):
     if predi == 0 or check_W(board)!=0 :
         eval_score =p*(evaluer(board,p)-evaluer(board,-p))
