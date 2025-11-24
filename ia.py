@@ -15,7 +15,7 @@ recompense_central =[
 [2,4,6,4,2],
 [1,2,3,2,1],
 ]
-#fonction qui essayer d'evaluer qui gagne la partie, important pour la logique de l'ia
+#fonction qui essaye d'evaluer qui gagne la partie, important pour la logique de l'ia
 
 def evaluer(board,p):
     score=0
@@ -101,15 +101,14 @@ def Minmax_facile(board,p):
 #------Done--------#
 @lru_cache(maxsize=None)
 def Minmax_Ultime_Algo(board,p,predi):
-    if predi==0 or check_W!=0:
+    if predi==0 or check_W(board):
         return p*(evaluer(board,p)-evaluer(board,-p))
     else:
         score_max=-1000000
         pire_cas=1000000
         l=move_possible(board,p)
         for i in l:
-            n=len(i)
-            if n==2:
+            if len(i)==2:
                 new_board= [list(row) for row in board]
                 place_pion(new_board,i[0],i[1],p)
                 usable_board=tuple(tuple(row) for row in new_board)
@@ -118,7 +117,7 @@ def Minmax_Ultime_Algo(board,p,predi):
                     score_max=score
                 if pire_cas > score and p==-1:
                     pire_cas=score
-            if n==3:
+            if len(i)==3:
                 new_board= [list(row) for row in board]
                 move_pion(new_board,i[0],i[1],p,i[2])
                 usable_board=tuple(tuple(row) for row in new_board)
@@ -138,8 +137,7 @@ def Minmax_Ultime(board,p,predi):
     meilleur_move=()
     l=move_possible(board,p)
     for i in l:
-        n=len(i)
-        if n==2:
+        if len(i)==2:
             new_board= copy.deepcopy(board)
             place_pion(new_board,i[0],i[1],p)
             if check_W(new_board):  
@@ -151,7 +149,7 @@ def Minmax_Ultime(board,p,predi):
             if score > score_max:
                 score_max=score
                 meilleur_move=i
-        if n==3:
+        if len(i)==3:
             new_board= copy.deepcopy(board)
             move_pion(new_board,i[0],i[1],p,i[2])
             if check_W(new_board):
@@ -163,10 +161,10 @@ def Minmax_Ultime(board,p,predi):
             if score > score_max:
                 score_max=score
                 meilleur_move=i
-    if n==2:
+    if len(meilleur_move)==2:
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
         return board
-    if n==3:
+    if len(meilleur_move)==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
         return board
 
