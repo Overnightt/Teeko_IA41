@@ -9,11 +9,11 @@ from functools import lru_cache #trés important
 #ici on etablie les recompense pour le controle d'un case centrale car celles ci sont plus importantes
 #car plus de combinaison sont possible quand celles ci sont controlées
 recompense_central =[
-[1,2,3,2,1],
-[2,4,6,4,2],
-[3,6,10,6,2],
-[2,4,6,4,2],
-[1,2,3,2,1],
+[1,2,1,2,1],
+[2,3,3,3,2],
+[1,3,4,3,1],
+[2,3,3,3,2],
+[1,2,1,2,1],
 ]
 #fonction qui essaye d'evaluer qui gagne la partie, important pour la logique de l'ia
 
@@ -91,7 +91,7 @@ def Minmax_facile(board,p):
 #c'est a dire celui qui entraine un plateau le plus a l'avantage de l'ia, sera choisi
 
 
-#après avoir créer deux algorithme basique qui m'on permis de comprendre le concept du minmax j'ai eu l'idée
+#après avoir créer un algorithme basique qui m'a permis de comprendre le concept du minmax j'ai eu l'idée
 #j'avais envie de faire un algorithme capable de regarder le plus loin dans le futur (coups possible) possible
 # dans les limites de ma machine bien sur. Afin de ne pas faire un programme avec trop de if, j'ai decidé de
 #faire un programme recursif ou l'on peut choisir le nombre de coup dans le futur analysé par l'ia. Le programme
@@ -101,14 +101,15 @@ def Minmax_facile(board,p):
 #------Done--------#
 @lru_cache(maxsize=None)
 def Minmax_Ultime_Algo(board,p,predi):
-    if predi==0 or check_W(board):
+    if predi==0 or check_W(board)!=0:
         return p*(evaluer(board,p)-evaluer(board,-p))
     else:
         score_max=-1000000
         pire_cas=1000000
         l=move_possible(board,p)
         for i in l:
-            if len(i)==2:
+            n=len(i)
+            if n==2:
                 new_board= [list(row) for row in board]
                 place_pion(new_board,i[0],i[1],p)
                 usable_board=tuple(tuple(row) for row in new_board)
@@ -117,7 +118,7 @@ def Minmax_Ultime_Algo(board,p,predi):
                     score_max=score
                 if pire_cas > score and p==-1:
                     pire_cas=score
-            if len(i)==3:
+            if n==3:
                 new_board= [list(row) for row in board]
                 move_pion(new_board,i[0],i[1],p,i[2])
                 usable_board=tuple(tuple(row) for row in new_board)
@@ -137,7 +138,8 @@ def Minmax_Ultime(board,p,predi):
     meilleur_move=()
     l=move_possible(board,p)
     for i in l:
-        if len(i)==2:
+        n=len(i)
+        if n==2:
             new_board= copy.deepcopy(board)
             place_pion(new_board,i[0],i[1],p)
             if check_W(new_board):  
@@ -149,7 +151,7 @@ def Minmax_Ultime(board,p,predi):
             if score > score_max:
                 score_max=score
                 meilleur_move=i
-        if len(i)==3:
+        if n==3:
             new_board= copy.deepcopy(board)
             move_pion(new_board,i[0],i[1],p,i[2])
             if check_W(new_board):
