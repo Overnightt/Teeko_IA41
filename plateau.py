@@ -147,7 +147,12 @@ def menu_loop(screen, clock, font, bigfont):
                 if b_easy.is_clicked(pos):
                     return 0, 3
                 if b_med.is_clicked(pos):
-                    return 1, 3
+                    # lire la profondeur courante depuis input_text (sinon utiliser 3)
+                    try:
+                        dd = int(input_text) if input_text.strip() != "" else depth
+                    except:
+                        dd = depth
+                    return 1, dd
                 if b_ult.is_clicked(pos):
                     # lire la profondeur courante depuis input_text (sinon utiliser 3)
                     try:
