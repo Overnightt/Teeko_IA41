@@ -181,28 +181,26 @@ def AlphaBeta(board,p,predi):
     meilleur_move=() 
     l=move_possible(board,p)
 
-    for i in l:
+    for i in l:        #on parcours la liste des mouvements possible 
         n=len(i)
 
-        if n==2:
+        if n==2:                       #si on est dans la phase de placement on procède ainsi
             new_board= [list(row) for row in board]
             place_pion(new_board,i[0],i[1],p)
             usable_board=tuple(tuple(row) for row in new_board)
             score = AlphaBeta_Algo(usable_board,-p,predi-1,alpha,beta)
-            if score > best_score:
-                best_score = score
-                meilleur_move=i
 
-        if n==3:
+        if n==3:                      #si on est dans la phase de mouvement on procède ainsi
             new_board= [list(row) for row in board]
             move_pion(new_board,i[0],i[1],p,i[2])
             usable_board=tuple(tuple(row) for row in new_board)
             score = AlphaBeta_Algo(usable_board,-p,predi-1,alpha,beta)
-            if score > best_score:
-                best_score = score
-                meilleur_move=i
-    #Applique le meilleur coup#Applique le meilleur coup
-    if n==2:                           
+
+        if score > best_score:      #on selection le meilleur coup
+            best_score = score
+            meilleur_move=i
+
+    if n==2:                        #Applique le meilleur coup#                          
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
     if n==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
@@ -211,62 +209,58 @@ def AlphaBeta(board,p,predi):
 
 @lru_cache(maxsize=None)
 def AlphaBeta_Algo(board, p, predi, alpha, beta):
-    if predi == 0 or check_W(board)!=0 :
+    if predi == 0 or check_W(board)!=0 :       #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
         eval_score =p*(evaluer(board,p)-evaluer(board,-p))
         return eval_score
     
     l = move_possible(board, p)
-    if p == 1:  
-        val = -100000000 #equivalent a -inf
-        for i in l:
+
+    if p == 1:                      #Cas ou on maximise
+        val = -100000000            #equivalent a -inf
+        for i in l:                 #on parcours la liste des mouvements possible
             n=len(i)
-            if n == 2:
+
+            if n == 2:              #si on est dans la phase de placement on procède ainsi
                 new_board = [list(row) for row in board]
                 place_pion(new_board, i[0], i[1], p)
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
                 val=max(score,val)
-                #elagage alphabeta
-                if val >= beta:  
-                    return val 
 
-                alpha=max(alpha,val) 
-            elif n == 3:
+            elif n == 3:            #si on est dans la phase de mouvement on procède ainsi
                 new_board = [list(row) for row in board]
                 move_pion(new_board, i[0], i[1], p, i[2])
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
                 val=max(score,val)
-                #elagage alphabeta
-                if val >= beta:
-                    return val
                 
-                alpha=max(alpha,val)
-        return val
-    else:  
-        val = 100000000    #equivalent a +inf
-        for i in l:
+            if val >= beta:         #elagage alphabeta
+                return val
+            alpha=max(alpha,val)    #on redefinit la valeur de alpha si besoin
+
+        return val                  #on renvoit le score
+
+    else:                           #Cas ou on minimise
+        val = 100000000             #equivalent a +inf
+        for i in l:                 #on parcours la liste des mouvements possible
             n=len(i)
-            if n == 2:
+
+            if n == 2:              #si on est dans la phase de placement on procède ainsi
                 new_board = [list(row) for row in board]
                 place_pion(new_board, i[0], i[1], p)
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
                 val=min(score,val)
-                #elagage alphabeta
-                if val <= alpha:
-                    return val
 
-                beta=min(beta,val)
-            elif n == 3:
+            elif n == 3:            #si on est dans la phase de mouvement on procède ainsi
                 new_board = [list(row) for row in board]
                 move_pion(new_board, i[0], i[1], p, i[2])
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
                 val=min(score,val)
-                #elagage alphabeta
-                if val <= alpha:
-                    return val
-
-                beta=min(beta,val)
-        return val
+                
+            if val <= alpha:        #elagage alphabeta
+                return val
+            beta=min(beta,val)      #on redefinit la valeur de beta si besoin
+        
+        return val            #on renvoit le score
