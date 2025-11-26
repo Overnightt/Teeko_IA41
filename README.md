@@ -50,6 +50,8 @@ This section will be updated with results and data once the performance analysis
 
 ### ⏱️ Speed Tests 
 
+![alt text](https://github.com/Overnightt/Teeko_IA41/blob/MainV2/Bar_Chart.png?raw=true)
+
 To optimize the user experience and the AI's efficiency, we plan to conduct tests to evaluate the **calculation speed** of our algorithm.
 
 Results will be presented in a table listing the average move time based on search depth.
