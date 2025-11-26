@@ -15,8 +15,9 @@ recompense_central =[
 [2,3,3,3,2],
 [1,2,1,2,1],
 ]
-#fonction qui essaye d'evaluer qui gagne la partie, important pour la logique de l'ia
 
+
+#fonction qui evalue le score du joueur p dans la partie, important pour la logique de l'ia
 def evaluer(board,p):
     score=0
     directions=[(1,0),(0,1),(1,1),(1,-1)]
@@ -85,20 +86,15 @@ def Minmax_facile(board,p):
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
         return board
 
-#fonction de minmax qui renvoit le plateau avec le meilleur mouvement appliqué mais qui cette fois ci
-#après avoir effectuer un mouvement regarde le pire des cas , c'est a dire le meilleur mouvement que
-#l'ennemi peut faire et note le score, le mouvement qui entraine le pire des cas avec le score le plus élevé
-#c'est a dire celui qui entraine un plateau le plus a l'avantage de l'ia, sera choisi
+#------MinMax--------#
 
-
-#après avoir créer un algorithme basique qui m'a permis de comprendre le concept du minmax j'ai eu l'idée
+#après avoir créer un algorithme basique qui m'a permis de comprendre le concept du minmax 
 #j'avais envie de faire un algorithme capable de regarder le plus loin dans le futur (coups possible) possible
 # dans les limites de ma machine bien sur. Afin de ne pas faire un programme avec trop de if, j'ai decidé de
 #faire un programme recursif ou l'on peut choisir le nombre de coup dans le futur analysé par l'ia. Le programme
 #est divisé en 2 partie, une qui s'occupe de la recursivité et l'autre de l'initialisation et de l'application
 #des mouvements
 
-#------Done--------#
 @lru_cache(maxsize=None)
 def Minmax_Ultime_Algo(board,p,predi):
     if predi==0 or check_W(board)!=0:
@@ -163,14 +159,16 @@ def Minmax_Ultime(board,p,predi):
             if score > score_max:
                 score_max=score
                 meilleur_move=i
-    if len(meilleur_move)==2:
+    if len(meilleur_move)==2:           #Applique le meilleur coup
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
         return board
     if len(meilleur_move)==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
         return board
 
-#------WORK IN PROGRESS !--------#
+#------Alpha Beta--------#
+
+#Algorithme basé sur Minmax. L'élegage AlphaBeta permet de faire monter la profondeur à 6 (pas raport a 5 pour MinMax)
 
 def AlphaBeta(board,p,predi):
     alpha=-100000000 #equivalent a -inf
@@ -199,7 +197,8 @@ def AlphaBeta(board,p,predi):
             if score > best_score:
                 best_score = score
                 meilleur_move=i
-    if n==2:
+    #Applique le meilleur coup#Applique le meilleur coup
+    if n==2:                           
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
     if n==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
@@ -214,7 +213,7 @@ def AlphaBeta_Algo(board, p, predi, alpha, beta):
     
     l = move_possible(board, p)
     if p == 1:  
-        val = -100000000
+        val = -100000000 #equivalent a -inf
         for i in l:
             n=len(i)
             if n == 2:
@@ -223,10 +222,10 @@ def AlphaBeta_Algo(board, p, predi, alpha, beta):
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
                 val=max(score,val)
-                
-                if val >= beta:
+                #elagage alphabeta
+                if val >= beta:  
                     return val 
-                  
+
                 alpha=max(alpha,val) 
             elif n == 3:
                 new_board = [list(row) for row in board]
@@ -234,14 +233,14 @@ def AlphaBeta_Algo(board, p, predi, alpha, beta):
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
                 val=max(score,val)
-                
+                #elagage alphabeta
                 if val >= beta:
                     return val
                 
                 alpha=max(alpha,val)
         return val
     else:  
-        val = 100000000
+        val = 100000000    #equivalent a +inf
         for i in l:
             n=len(i)
             if n == 2:
@@ -250,9 +249,10 @@ def AlphaBeta_Algo(board, p, predi, alpha, beta):
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
                 val=min(score,val)
-                
+                #elagage alphabeta
                 if val <= alpha:
                     return val
+
                 beta=min(beta,val)
             elif n == 3:
                 new_board = [list(row) for row in board]
@@ -260,8 +260,9 @@ def AlphaBeta_Algo(board, p, predi, alpha, beta):
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
                 val=min(score,val)
-                
+                #elagage alphabeta
                 if val <= alpha:
                     return val
+
                 beta=min(beta,val)
         return val
