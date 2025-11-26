@@ -49,12 +49,11 @@ The code is organized around these main files:
 This section will be updated with results and data once the performance analysis and strategic tests have been conducted.
 
 ### ⏱️ Speed Tests 
+This section details the performance comparison between the standard Minmax algorithm and the optimized Minmax with Alpha-Beta Pruning implemented for the Teeko game AI. The goal was to quantify the computational efficiency gained through pruning as the search depth increases. To measure the data I simply computed the average time taken in 5 occurence at each depth.
 
 ![alt text](https://github.com/Overnightt/Teeko_IA41/blob/MainV2/Image_for_readme/Bar_chart.png?raw=true)
 
-To optimize the user experience and the AI's efficiency, we plan to conduct tests to evaluate the **calculation speed** of our algorithm.
-
-Results will be presented in a table listing the average move time based on search depth.
+The results confirm that **Alpha-Beta Pruning significantly improves search speed**, especially at higher depths where the number of possible game states explodes.
 
 ### 🤖 AI vs AI Comparison (Strategic Evaluation)
 
