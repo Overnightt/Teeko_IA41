@@ -166,10 +166,9 @@ def Minmax_Ultime(board,p,predi):
 
     if len(meilleur_move)==2:                     #Applique le meilleur coup
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
-        return board
     if len(meilleur_move)==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
-        return board
+    return board
 
 #------Alpha Beta--------#
 
