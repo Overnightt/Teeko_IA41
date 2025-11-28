@@ -170,6 +170,79 @@ def Minmax_Ultime(board,p,predi):
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
     return board
 
+#Une fonction inverse de minmax utilisé pour IA vs IA (un joueur IA devra joueur avec des pions egal a 1 ce qui necessite de changer la logique)
+def Revert_Minmax_Ultime(board,p,predi):
+    score_max=-1000000  #equivalent a -inf, on utilise uniquement score max car on apelle cette fonction uniquement pour maximiser le score
+    meilleur_move=()
+    l=move_possible(board,p)
+
+    for i in l:        #on parcours la liste des mouvements possible 
+        n=len(i)
+
+        if n==2:                            #si on est dans la phase de placement on procède ainsi
+            new_board= copy.deepcopy(board)
+            place_pion(new_board,i[0],i[1],p)
+            if check_W(new_board):          #Si le coup entraine la victoire, on l'applique immédiatement
+                meilleur_move=i
+                place_pion(board,i[0],i[1],p)
+                return board
+            usable_board=tuple(tuple(row) for row in new_board)
+            score = Revert_Minmax_Ultime_Algo(usable_board,-p,predi-1)
+
+        if n==3:                            #si on est dans la phase de mouvement on procède ainsi
+            new_board= copy.deepcopy(board)
+            move_pion(new_board,i[0],i[1],p,i[2])
+            if check_W(new_board):          #Si le coup entraine la victoire, on l'applique immédiatement
+                meilleur_move=i
+                move_pion(board,i[0],i[1],p,i[2])
+                return board
+            usable_board=tuple(tuple(row) for row in new_board)
+            score = Revert_Minmax_Ultime_Algo(usable_board,-p,predi-1)
+
+        if score > score_max:        #on selection le meilleur coup
+            score_max=score
+            meilleur_move=i
+
+    if len(meilleur_move)==2:                     #Applique le meilleur coup
+        place_pion(board,meilleur_move[0],meilleur_move[1],p)
+    if len(meilleur_move)==3:
+        move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
+    return board
+
+#Une fonction inverse de minmax algo
+@lru_cache(maxsize=None)
+def Revert_Minmax_Ultime_Algo(board,p,predi):
+    if predi==0 or check_W(board)!=0:     #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
+        return p*(evaluer(board,p)-evaluer(board,-p))
+    else:
+        score_max=-1000000   #equivalent a -inf
+        pire_cas=1000000     #equivalent a +inf
+        l=move_possible(board,p)
+
+        for i in l:               #on parcours la liste des mouvements possible 
+            n=len(i)
+            
+            if n==2:                            #si on est dans la phase de placement on procède ainsi
+                new_board= [list(row) for row in board]
+                place_pion(new_board,i[0],i[1],p)
+                usable_board=tuple(tuple(row) for row in new_board)
+                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
+           
+            if n==3:                              #si on est dans la phase de mouvement on procède ainsi
+                new_board= [list(row) for row in board]
+                move_pion(new_board,i[0],i[1],p,i[2])
+                usable_board=tuple(tuple(row) for row in new_board)
+                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
+            
+            if score > score_max and p==-1:         #on choisi le meilleur score a renvoyer si on maximise (si l'ia joue)
+                score_max=score    
+            if pire_cas > score and p==1:         #on choisi le meilleur score que l'adversaire peu faire si on minimise
+                pire_cas=score
+        
+        if p==-1:                                   #on renvoi les scores
+            return score_max
+        if p==1:
+            return pire_cas
 #------Alpha Beta--------#
 
 #Algorithme basé sur Minmax. L'élegage AlphaBeta permet de faire monter la profondeur à 6 (pas raport a 5 pour MinMax)
