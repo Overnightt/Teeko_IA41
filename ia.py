@@ -170,6 +170,9 @@ def Minmax_Ultime(board,p,predi):
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
     return board
 
+#------MinMax Inversé--------#
+#Pas très important
+
 #Une fonction inverse de minmax utilisé pour IA vs IA (un joueur IA devra joueur avec des pions egal a 1 ce qui necessite de changer la logique)
 def Revert_Minmax_Ultime(board,p,predi):
     score_max=-1000000  #equivalent a -inf, on utilise uniquement score max car on apelle cette fonction uniquement pour maximiser le score
@@ -243,6 +246,8 @@ def Revert_Minmax_Ultime_Algo(board,p,predi):
             return score_max
         if p==1:
             return pire_cas
+
+
 #------Alpha Beta--------#
 
 #Algorithme basé sur Minmax. L'élegage AlphaBeta permet de faire monter la profondeur à 6 (pas raport a 5 pour MinMax)
