@@ -178,10 +178,10 @@ def menu_loop(screen, clock, font, bigfont):
     # liste de paires pour IA vs IA (cycle)
     ia_pairs = [
         ("Facile","Facile"),
-        ("AlphaBeta","AlphaBeta"),
-        ("Minmax","Minmax"),
-        ("AlphaBeta_","Minmax_"),
-        ("Minmax_","AlphaBeta_"),
+        ("AlphaBeta_","AlphaBeta"),
+        ("Minmax_","Minmax"),
+        ("AlphaBeta_","Minmax"),
+        ("Minmax_","AlphaBeta"),
     ]
     ia_pair_index = 0
 
@@ -256,7 +256,7 @@ def menu_loop(screen, clock, font, bigfont):
                         screen.fill(BG)
                         screen.blit(title, (MARGIN, 40))
                         b_easy.draw(screen); b_med.draw(screen); b_ult.draw(screen)
-                        info = font.render("Choisissez la profondeur pour Minmax si nécessaire (3-4 sinon crash): ", True, TXT)
+                        info = font.render("Choisissez la profondeur pour Minmax si nécessaire: ", True, TXT)
                         screen.blit(info, (MARGIN, 300))
                         color = (180, 220, 255) if sub_input_active else (255, 255, 255)
                         pygame.draw.rect(screen, color, sub_input_box)
@@ -363,10 +363,10 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
     #default IA vs IA pair index (0 => Facile vs Facile)
     ia_pairs = [
         ("Facile","Facile"),
-        ("AlphaBeta","AlphaBeta"),
-        ("Minmax","Minmax"),
-        ("AlphaBeta_","Minmax_"),
-        ("Minmax_","AlphaBeta_"),
+        ("AlphaBeta","AlphaBeta_"),
+        ("Minmax","Minmax_"),
+        ("AlphaBeta","Minmax_"),
+        ("Minmax","AlphaBeta_"),
     ]
     # if menu provided an ia_pair, set the index accordingly
     try:
