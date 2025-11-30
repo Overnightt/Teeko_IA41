@@ -9,14 +9,15 @@ from functools import lru_cache #trés important
 #ici on etablie les recompense pour le controle d'un case centrale car celles ci sont plus importantes
 #car plus de combinaison sont possible quand celles ci sont controlées
 recompense_central =[
-[1,2,3,2,1],
-[2,4,6,4,2],
-[3,6,10,6,2],
-[2,4,6,4,2],
-[1,2,3,2,1],
+[1,2,1,2,1],
+[2,3,3,3,2],
+[1,3,4,3,1],
+[2,3,3,3,2],
+[1,2,1,2,1],
 ]
-#fonction qui essayer d'evaluer qui gagne la partie, important pour la logique de l'ia
 
+
+#fonction qui evalue le score du joueur p dans la partie, important pour la logique de l'ia
 def evaluer(board,p):
     score=0
     directions=[(1,0),(0,1),(1,1),(1,-1)]
@@ -42,8 +43,9 @@ def evaluer(board,p):
                         score+=100
                     if compte==3:
                         score+=1000
-                #voici la partie qui gère les carré
-            if i < 4 and j < 4:
+
+                
+            if i < 4 and j < 4: #voici la partie qui gère les carré
                 if board[i][j] == p and board[i+1][j] == p and board[i][j+1] == p and board[i+1][j+1] == p:
                     score+=1000
                 elif  board[i][j] == p and board[i+1][j] == p and board[i][j+1] == p:
@@ -55,24 +57,7 @@ def evaluer(board,p):
                 elif  board[i][j+1] == p and board[i][j] == p and board[i+1][j+1] == p:
                     score+=100
     return score
-    
-    # Count squares (avoid double counting)
-    counted_squares = set()
-    for i in range(4):
-        for j in range(4):
-            square_cells = [(i,j), (i+1,j), (i,j+1), (i+1,j+1)]
-            square_id = tuple(sorted(square_cells))
-            
-            if square_id not in counted_squares:
-                counted_squares.add(square_id)
-                p_count = sum(1 for x, y in square_cells if board[x][y] == p)
-                
-                if p_count == 4:
-                    score += 1000
-                elif p_count == 3:
-                    score += 100
-    
-    return score
+
 
 #fonction de minmax qui renvoit le plateau avec le meilleur mouvement appliqué sans se soucier des 
 #mouvements possibles de l'adversaire
@@ -102,245 +87,353 @@ def Minmax_facile(board,p):
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
         return board
 
-#fonction de minmax qui renvoit le plateau avec le meilleur mouvement appliqué mais qui cette fois ci
-#après avoir effectuer un mouvement regarde le pire des cas , c'est a dire le meilleur mouvement que
-#l'ennemi peut faire et note le score, le mouvement qui entraine le pire des cas avec le score le plus élevé
-#c'est a dire celui qui entraine un plateau le plus a l'avantage de l'ia, sera choisi
+#------MinMax--------#
 
-
-#après avoir créer deux algorithme basique qui m'on permis de comprendre le concept du minmax j'ai eu l'idée
+#après avoir créer un algorithme basique qui m'a permis de comprendre le concept du minmax 
 #j'avais envie de faire un algorithme capable de regarder le plus loin dans le futur (coups possible) possible
 # dans les limites de ma machine bien sur. Afin de ne pas faire un programme avec trop de if, j'ai decidé de
 #faire un programme recursif ou l'on peut choisir le nombre de coup dans le futur analysé par l'ia. Le programme
 #est divisé en 2 partie, une qui s'occupe de la recursivité et l'autre de l'initialisation et de l'application
-#des mouvements
+#des mouvements. J'ai utilisé Memoize afin de rendre l'algorithme encore plus performant et le permettre de passer de 4
+# à 5 appel recursif maximum
 
-#------Done--------#
 @lru_cache(maxsize=None)
 def Minmax_Ultime_Algo(board,p,predi):
-    if predi==0 or check_W(board):
+    if predi==0 or check_W(board)!=0:     #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
         return p*(evaluer(board,p)-evaluer(board,-p))
     else:
-        score_max=-1000000
-        pire_cas=1000000
+        score_max=-1000000   #equivalent a -inf
+        pire_cas=1000000     #equivalent a +inf
         l=move_possible(board,p)
-        for i in l:
-            if len(i)==2:
-                new_board= [list(row) for row in board]
-                place_pion(new_board,i[0],i[1],p)
-                usable_board=tuple(tuple(row) for row in new_board)
-                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
-                if score > score_max and p==1:
-                    score_max=score
-                if pire_cas > score and p==-1:
-                    pire_cas=score
-            if len(i)==3:
-                new_board= [list(row) for row in board]
-                move_pion(new_board,i[0],i[1],p,i[2])
-                usable_board=tuple(tuple(row) for row in new_board)
-                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
-                if score > score_max and p==1:
-                    score_max=score
-                if pire_cas > score and p==-1:
-                    pire_cas=score
-        if p==1:
-            return score_max
-        if p==-1:
-            return pire_cas
 
-@lru_cache(maxsize=None)
-def Revert_Minmax_Ultime_Algo(board,p,predi):
-    if predi==0 or check_W(board):
-        return p*(evaluer(board,p)-evaluer(board,-p))
-    else:
-        score_max=-1000000
-        pire_cas=1000000
-        l=move_possible(board,p)
-        for i in l:
-            if len(i)==2:
+        for i in l:               #on parcours la liste des mouvements possible 
+            n=len(i)
+            
+            if n==2:                            #si on est dans la phase de placement on procède ainsi
                 new_board= [list(row) for row in board]
                 place_pion(new_board,i[0],i[1],p)
                 usable_board=tuple(tuple(row) for row in new_board)
                 score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
-                if score > score_max and p==-1:
-                    score_max=score
-                if pire_cas > score and p==1:
-                    pire_cas=score
-            if len(i)==3:
+           
+            if n==3:                              #si on est dans la phase de mouvement on procède ainsi
                 new_board= [list(row) for row in board]
                 move_pion(new_board,i[0],i[1],p,i[2])
                 usable_board=tuple(tuple(row) for row in new_board)
                 score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
-                if score > score_max and p==-1:
-                    score_max=score
-                if pire_cas > score and p==1:
-                    pire_cas=score
-        if p==-1:
+            
+            if score > score_max and p==1:         #on choisi le meilleur score a renvoyer si on maximise (si l'ia joue)
+                score_max=score    
+            if pire_cas > score and p==-1:         #on choisi le meilleur score que l'adversaire peu faire si on minimise
+                pire_cas=score
+        
+        if p==1:                                   #on renvoi les scores
             return score_max
-        if p==1:
+        if p==-1:
             return pire_cas
 
 
 def Minmax_Ultime(board,p,predi):
-    score_max=-1000000
+    score_max=-1000000  #equivalent a -inf, on utilise uniquement score max car on apelle cette fonction uniquement pour maximiser le score
     meilleur_move=()
     l=move_possible(board,p)
-    for i in l:
-        if len(i)==2:
+
+    for i in l:        #on parcours la liste des mouvements possible 
+        n=len(i)
+
+        if n==2:                            #si on est dans la phase de placement on procède ainsi
             new_board= copy.deepcopy(board)
             place_pion(new_board,i[0],i[1],p)
-            if check_W(new_board):  
+            if check_W(new_board):          #Si le coup entraine la victoire, on l'applique immédiatement
                 meilleur_move=i
                 place_pion(board,i[0],i[1],p)
                 return board
             usable_board=tuple(tuple(row) for row in new_board)
             score = Minmax_Ultime_Algo(usable_board,-p,predi-1)
-            if score > score_max:
-                score_max=score
-                meilleur_move=i
-        if len(i)==3:
+
+        if n==3:                            #si on est dans la phase de mouvement on procède ainsi
             new_board= copy.deepcopy(board)
             move_pion(new_board,i[0],i[1],p,i[2])
-            if check_W(new_board):
+            if check_W(new_board):          #Si le coup entraine la victoire, on l'applique immédiatement
                 meilleur_move=i
                 move_pion(board,i[0],i[1],p,i[2])
                 return board
             usable_board=tuple(tuple(row) for row in new_board)
             score = Minmax_Ultime_Algo(usable_board,-p,predi-1)
-            if score > score_max:
-                score_max=score
-                meilleur_move=i
-    if len(meilleur_move)==2:
+
+        if score > score_max:        #on selection le meilleur coup
+            score_max=score
+            meilleur_move=i
+
+    if len(meilleur_move)==2:                     #Applique le meilleur coup
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
-        return board
     if len(meilleur_move)==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
-        return board
+    return board
 
+#------MinMax Inversé--------#
+#Pas très important
+
+#Une fonction inverse de minmax utilisé pour IA vs IA (un joueur IA devra joueur avec des pions egal a -1 ce qui necessite de changer la logique)
 def Revert_Minmax_Ultime(board,p,predi):
-    score_max=-1000000
+    score_max=-1000000  #equivalent a -inf, on utilise uniquement score max car on apelle cette fonction uniquement pour maximiser le score
     meilleur_move=()
     l=move_possible(board,p)
-    for i in l:
-        if len(i)==2:
+
+    for i in l:        #on parcours la liste des mouvements possible 
+        n=len(i)
+
+        if n==2:                            #si on est dans la phase de placement on procède ainsi
             new_board= copy.deepcopy(board)
             place_pion(new_board,i[0],i[1],p)
-            if check_W(new_board):  
+            if check_W(new_board):          #Si le coup entraine la victoire, on l'applique immédiatement
                 meilleur_move=i
                 place_pion(board,i[0],i[1],p)
                 return board
             usable_board=tuple(tuple(row) for row in new_board)
             score = Revert_Minmax_Ultime_Algo(usable_board,-p,predi-1)
-            if score > score_max:
-                score_max=score
-                meilleur_move=i
-        if len(i)==3:
+
+        if n==3:                            #si on est dans la phase de mouvement on procède ainsi
             new_board= copy.deepcopy(board)
             move_pion(new_board,i[0],i[1],p,i[2])
-            if check_W(new_board):
+            if check_W(new_board):          #Si le coup entraine la victoire, on l'applique immédiatement
                 meilleur_move=i
                 move_pion(board,i[0],i[1],p,i[2])
                 return board
             usable_board=tuple(tuple(row) for row in new_board)
             score = Revert_Minmax_Ultime_Algo(usable_board,-p,predi-1)
-            if score > score_max:
-                score_max=score
-                meilleur_move=i
-    if len(meilleur_move)==2:
+
+        if score > score_max:        #on selection le meilleur coup
+            score_max=score
+            meilleur_move=i
+
+    if len(meilleur_move)==2:                     #Applique le meilleur coup
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
-        return board
     if len(meilleur_move)==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
-        return board
+    return board
 
-#------WORK IN PROGRESS !--------#
+#Une fonction inverse de minmax algo
+@lru_cache(maxsize=None)
+def Revert_Minmax_Ultime_Algo(board,p,predi):
+    if predi==0 or check_W(board)!=0:     #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
+        return p*(evaluer(board,p)-evaluer(board,-p))
+    else:
+        score_max=-1000000   #equivalent a -inf
+        pire_cas=1000000     #equivalent a +inf
+        l=move_possible(board,p)
+
+        for i in l:               #on parcours la liste des mouvements possible 
+            n=len(i)
+            
+            if n==2:                            #si on est dans la phase de placement on procède ainsi
+                new_board= [list(row) for row in board]
+                place_pion(new_board,i[0],i[1],p)
+                usable_board=tuple(tuple(row) for row in new_board)
+                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
+           
+            if n==3:                              #si on est dans la phase de mouvement on procède ainsi
+                new_board= [list(row) for row in board]
+                move_pion(new_board,i[0],i[1],p,i[2])
+                usable_board=tuple(tuple(row) for row in new_board)
+                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
+            
+            if score > score_max and p==-1:         #on choisi le meilleur score a renvoyer si on maximise (si l'ia joue)
+                score_max=score    
+            if pire_cas > score and p==1:         #on choisi le meilleur score que l'adversaire peu faire si on minimise
+                pire_cas=score
+        
+        if p==-1:                                   #on renvoi les scores
+            return score_max
+        if p==1:
+            return pire_cas
+
+
+#------Alpha Beta--------#
+
+#Algorithme basé sur Minmax. L'élegage AlphaBeta permet de faire monter la profondeur à 6 (pas raport a 5 pour MinMax)
+
 def AlphaBeta(board,p,predi):
-    alpha=-100000000
-    beta=1000000000
-    meilleur_move=()
+    alpha=-100000000 #equivalent a -inf
+    beta=1000000000  #equivalent a +inf
+    best_score= -100000000 #equivalent a -inf
+    meilleur_move=() 
     l=move_possible(board,p)
-    for i in l:
-        if len(i)==2:
+
+    for i in l:        #on parcours la liste des mouvements possible 
+        n=len(i)
+
+        if n==2:                       #si on est dans la phase de placement on procède ainsi
             new_board= [list(row) for row in board]
             place_pion(new_board,i[0],i[1],p)
-            if check_W(new_board):  
-                meilleur_move=i
-                break
             usable_board=tuple(tuple(row) for row in new_board)
             score = AlphaBeta_Algo(usable_board,-p,predi-1,alpha,beta)
-            if score > alpha:
-                alpha=score
-                meilleur_move=i
-                if alpha >= beta:
-                    break
-        if len(i)==3:
+
+        if n==3:                      #si on est dans la phase de mouvement on procède ainsi
             new_board= [list(row) for row in board]
             move_pion(new_board,i[0],i[1],p,i[2])
-            if check_W(new_board):
-                meilleur_move=i
-                break
             usable_board=tuple(tuple(row) for row in new_board)
             score = AlphaBeta_Algo(usable_board,-p,predi-1,alpha,beta)
-            if score > alpha:
-                alpha=score
-                meilleur_move=i
-                if alpha >= beta:
-                    break
-    if len(meilleur_move)==2:
+
+        if score > best_score:      #on selection le meilleur coup
+            best_score = score
+            meilleur_move=i
+
+    if n==2:                        #Applique le meilleur coup#                          
         place_pion(board,meilleur_move[0],meilleur_move[1],p)
-        return board
-    if len(meilleur_move)==3:
+    if n==3:
         move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
-        return board
+    return board
 
 
-
+@lru_cache(maxsize=None)
 def AlphaBeta_Algo(board, p, predi, alpha, beta):
-    if predi == 0 or check_W(board):
-        eval_score = p * (evaluer(board, p) - evaluer(board, -p))
+    if predi == 0 or check_W(board)!=0 :       #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
+        eval_score =p*(evaluer(board,p)-evaluer(board,-p))
         return eval_score
+    
     l = move_possible(board, p)
-    if p == 1:  
-        val = -100000000
-        for i in l:
-            if len(i) == 2:
+
+    if p == 1:                      #Cas ou on maximise
+        val = -100000000            #equivalent a -inf
+        for i in l:                 #on parcours la liste des mouvements possible
+            n=len(i)
+
+            if n == 2:              #si on est dans la phase de placement on procède ainsi
                 new_board = [list(row) for row in board]
                 place_pion(new_board, i[0], i[1], p)
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
-                val = max(val, score)
-                alpha = max(alpha, val)
-                if alpha >= beta:
-                    break
-            elif len(i) == 3:
+                val=max(score,val)
+
+            elif n == 3:            #si on est dans la phase de mouvement on procède ainsi
                 new_board = [list(row) for row in board]
                 move_pion(new_board, i[0], i[1], p, i[2])
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
-                val = max(val, score)
-                alpha = max(alpha, val)
-                if alpha >= beta:
-                    break
-        return val    
-    else:  
-        val = 100000000
-        for i in l:
-            if len(i) == 2:
+                val=max(score,val)
+                
+            if val >= beta:         #elagage alphabeta
+                return val
+            alpha=max(alpha,val)    #on redefinit la valeur de alpha si besoin
+
+        return val                  #on renvoit le score
+
+    else:                           #Cas ou on minimise
+        val = 100000000             #equivalent a +inf
+        for i in l:                 #on parcours la liste des mouvements possible
+            n=len(i)
+
+            if n == 2:              #si on est dans la phase de placement on procède ainsi
                 new_board = [list(row) for row in board]
                 place_pion(new_board, i[0], i[1], p)
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
-                val = min(val, score)
-                beta = min(beta, val)
-                if alpha >= beta:
-                    break
-            elif len(i) == 3:
+                val=min(score,val)
+
+            elif n == 3:            #si on est dans la phase de mouvement on procède ainsi
                 new_board = [list(row) for row in board]
                 move_pion(new_board, i[0], i[1], p, i[2])
                 usable_board = tuple(tuple(row) for row in new_board)
                 score = AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
-                val = min(val, score)
-                beta = min(beta, val)
-                if alpha >= beta:
-                    break
-        return val
+                val=min(score,val)
+                
+            if val <= alpha:        #elagage alphabeta
+                return val
+            beta=min(beta,val)      #on redefinit la valeur de beta si besoin
+        
+        return val            #on renvoit le score
+
+#------Alpha Beta inversé--------#
+#Pas très important
+
+#Une fonction inverse de Alphabeta utilisé pour IA vs IA (un joueur IA devra joueur avec des pions egal a -1 ce qui necessite necessite de changer la logique)
+def Revert_AlphaBeta(board,p,predi):
+    alpha=-100000000 #equivalent a -inf
+    beta=1000000000  #equivalent a +inf
+    best_score= -100000000 #equivalent a -inf
+    meilleur_move=() 
+    l=move_possible(board,p)
+
+    for i in l:        #on parcours la liste des mouvements possible 
+        n=len(i)
+
+        if n==2:                       #si on est dans la phase de placement on procède ainsi
+            new_board= [list(row) for row in board]
+            place_pion(new_board,i[0],i[1],p)
+            usable_board=tuple(tuple(row) for row in new_board)
+            score = Revert_AlphaBeta_Algo(usable_board,-p,predi-1,alpha,beta)
+
+        if n==3:                      #si on est dans la phase de mouvement on procède ainsi
+            new_board= [list(row) for row in board]
+            move_pion(new_board,i[0],i[1],p,i[2])
+            usable_board=tuple(tuple(row) for row in new_board)
+            score = Revert_AlphaBeta_Algo(usable_board,-p,predi-1,alpha,beta)
+
+        if score > best_score:      #on selection le meilleur coup
+            best_score = score
+            meilleur_move=i
+
+    if n==2:                        #Applique le meilleur coup#                          
+        place_pion(board,meilleur_move[0],meilleur_move[1],p)
+    if n==3:
+        move_pion(board,meilleur_move[0],meilleur_move[1],p,meilleur_move[2])
+    return board
+
+#Une fonction inverse de Alphabeta
+@lru_cache(maxsize=None)
+def Revert_AlphaBeta_Algo(board, p, predi, alpha, beta):
+    if predi == 0 or check_W(board)!=0 :       #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
+        eval_score =p*(evaluer(board,p)-evaluer(board,-p))
+        return eval_score
+    
+    l = move_possible(board, p)
+
+    if p == -1:                      #Cas ou on maximise
+        val = -100000000            #equivalent a -inf
+        for i in l:                 #on parcours la liste des mouvements possible
+            n=len(i)
+
+            if n == 2:              #si on est dans la phase de placement on procède ainsi
+                new_board = [list(row) for row in board]
+                place_pion(new_board, i[0], i[1], p)
+                usable_board = tuple(tuple(row) for row in new_board)
+                score = Revert_AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
+                val=max(score,val)
+
+            elif n == 3:            #si on est dans la phase de mouvement on procède ainsi
+                new_board = [list(row) for row in board]
+                move_pion(new_board, i[0], i[1], p, i[2])
+                usable_board = tuple(tuple(row) for row in new_board)
+                score = Revert_AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
+                val=max(score,val)
+                
+            if val >= beta:         #elagage alphabeta
+                return val
+            alpha=max(alpha,val)    #on redefinit la valeur de alpha si besoin
+
+        return val                  #on renvoit le score
+
+    else:                           #Cas ou on minimise
+        val = 100000000             #equivalent a +inf
+        for i in l:                 #on parcours la liste des mouvements possible
+            n=len(i)
+
+            if n == 2:              #si on est dans la phase de placement on procède ainsi
+                new_board = [list(row) for row in board]
+                place_pion(new_board, i[0], i[1], p)
+                usable_board = tuple(tuple(row) for row in new_board)
+                score = Revert_AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
+                val=min(score,val)
+
+            elif n == 3:            #si on est dans la phase de mouvement on procède ainsi
+                new_board = [list(row) for row in board]
+                move_pion(new_board, i[0], i[1], p, i[2])
+                usable_board = tuple(tuple(row) for row in new_board)
+                score = Revert_AlphaBeta_Algo(usable_board, -p, predi-1, alpha, beta)
+                val=min(score,val)
+                
+            if val <= alpha:        #elagage alphabeta
+                return val
+            beta=min(beta,val)      #on redefinit la valeur de beta si besoin
+        
+        return val            #on renvoit le score
