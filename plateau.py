@@ -8,7 +8,7 @@ import sys
 import copy
 import time
 import game
-from ia import Minmax_facile, Minmax_Ultime, AlphaBeta,Revert_Minmax_Ultime
+from ia import Minmax_facile, Minmax_Ultime, AlphaBeta,Revert_Minmax_Ultime,Revert_AlphaBeta
 
 # plateau partagé (main.py importe `board` depuis ici)
 board = [[0 for _ in range(5)] for __ in range(5)]
@@ -344,10 +344,10 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
     # default IA vs IA pair index (0 => Facile vs Facile)
     ia_pairs = [
         ("Facile","Facile"),
-        ("AlphaBeta","AlphaBeta"),
+        ("AlphaBeta","AlphaBeta_"),
         ("Minmax","Minmax_"),
         ("AlphaBeta","Minmax_"),
-        ("Minmax","AlphaBeta"),
+        ("Minmax","AlphaBeta_"),
     ]
     # if menu provided an ia_pair, set the index accordingly
     try:
@@ -493,6 +493,8 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
                     Minmax_facile(board, current_player)
                 elif ai_name == "AlphaBeta":
                     AlphaBeta(board, current_player, depth)
+                elif ai_name == "AlphaBeta_":
+                    Revert_AlphaBeta(board, current_player, depth)
                 elif ai_name == "Minmax":
                     Minmax_Ultime(board, current_player, depth)
                 elif ai_name == "Minmax_":
