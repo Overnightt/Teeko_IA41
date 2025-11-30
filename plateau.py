@@ -170,7 +170,7 @@ def menu_loop(screen, clock, font, bigfont):
 
 
     # sélection de la profondeur pour Ultime
-    depth = 3
+    depth = 4
     input_active = False
     input_text = str(depth)
     input_box = pygame.Rect(MARGIN, 360, 120, 32)
@@ -178,10 +178,10 @@ def menu_loop(screen, clock, font, bigfont):
     # liste de paires pour IA vs IA (cycle)
     ia_pairs = [
         ("Facile","Facile"),
-        ("AlphaBeta","AlphaBeta"),
-        ("Minmax","Minmax"),
-        ("AlphaBeta","Minmax"),
-        ("Minmax","AlphaBeta"),
+        ("AlphaBeta_","AlphaBeta"),
+        ("Minmax_","Minmax"),
+        ("AlphaBeta_","Minmax"),
+        ("Minmax_","AlphaBeta"),
     ]
     ia_pair_index = 0
 
@@ -308,6 +308,9 @@ def apply_ai_move_by_name(name, board_ref, player, depth):
     elif name == "AlphaBeta":
         # AlphaBeta prend (board, p, predi)
         AlphaBeta(board_ref, player, depth)
+    elif name == "AlphaBeta_":
+        # AlphaBeta prend (board, p, predi)
+        Revert_AlphaBeta(board_ref, player, depth)
     elif name == "Minmax":
         Minmax_Ultime(board_ref, player, depth)
     elif name == "Minmax_":
