@@ -344,7 +344,7 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
         depth = start_depth
         ia_pair = None
 
-    # default IA vs IA pair index (0 => Facile vs Facile)
+    #default IA vs IA pair index (0 => Facile vs Facile)
     ia_pairs = [
         ("Facile","Facile"),
         ("AlphaBeta","AlphaBeta_"),
@@ -495,7 +495,7 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
                 if ai_name == "Facile":
                     Minmax_facile(board, current_player)
                 elif ai_name == "AlphaBeta":
-                    AlphaBeta(board, current_player, depth)
+                   AlphaBeta(board, current_player, depth)
                 elif ai_name == "AlphaBeta_":
                     Revert_AlphaBeta(board, current_player, depth)
                 elif ai_name == "Minmax":
