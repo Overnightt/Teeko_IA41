@@ -216,7 +216,7 @@ def Revert_Minmax_Ultime(board,p,predi):
 @lru_cache(maxsize=None)
 def Revert_Minmax_Ultime_Algo(board,p,predi):
     if predi==0 or check_W(board)!=0:     #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
-        return p*(evaluer(board,p)-evaluer(board,-p))
+        return -p*(evaluer(board,p)-evaluer(board,-p))
     else:
         score_max=-1000000   #equivalent a -inf
         pire_cas=1000000     #equivalent a +inf
@@ -229,13 +229,13 @@ def Revert_Minmax_Ultime_Algo(board,p,predi):
                 new_board= [list(row) for row in board]
                 place_pion(new_board,i[0],i[1],p)
                 usable_board=tuple(tuple(row) for row in new_board)
-                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
+                score= Revert_Minmax_Ultime_Algo(usable_board,-p,predi-1)
            
             if n==3:                              #si on est dans la phase de mouvement on procède ainsi
                 new_board= [list(row) for row in board]
                 move_pion(new_board,i[0],i[1],p,i[2])
                 usable_board=tuple(tuple(row) for row in new_board)
-                score= Minmax_Ultime_Algo(usable_board,-p,predi-1)
+                score= Revert_Minmax_Ultime_Algo(usable_board,-p,predi-1)
             
             if score > score_max and p==-1:         #on choisi le meilleur score a renvoyer si on maximise (si l'ia joue)
                 score_max=score    
