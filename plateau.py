@@ -614,11 +614,9 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
                 if current_player == IA:
                     ai_name = ia_config['ia1_algo']
                     ai_depth = ia_config['ia1_depth']
-                    print("mon algo est" ,ai_name ,"je suis le joueur" ,current_player)
                 else:
                     ai_name = ia_config['ia2_algo']
                     ai_depth = ia_config['ia2_depth']
-                    print("mon algo est" ,ai_name, "je suis le joueur", current_player)
 
                 apply_ai_move_by_name(ai_name, board, current_player, ai_depth)
 
