@@ -216,7 +216,7 @@ def Revert_Minmax_Ultime(board,p,predi):
 @lru_cache(maxsize=None)
 def Revert_Minmax_Ultime_Algo(board,p,predi):
     if predi==0 or check_W(board)!=0:     #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
-        return p*(evaluer(board,p)-evaluer(board,-p))
+        return -p*(evaluer(board,p)-evaluer(board,-p))
     else:
         score_max=-1000000   #equivalent a -inf
         pire_cas=1000000     #equivalent a +inf
@@ -288,7 +288,7 @@ def AlphaBeta(board,p,predi):
 @lru_cache(maxsize=None)
 def AlphaBeta_Algo(board, p, predi, alpha, beta):
     if predi == 0 or check_W(board)!=0 :       #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
-        eval_score =p*(evaluer(board,p)-evaluer(board,-p))
+        eval_score = p*(evaluer(board,p)-evaluer(board,-p))
         return eval_score
     
     l = move_possible(board, p)
@@ -348,6 +348,7 @@ def AlphaBeta_Algo(board, p, predi, alpha, beta):
 
 #Une fonction inverse de Alphabeta utilisé pour IA vs IA (un joueur IA devra joueur avec des pions egal a -1 ce qui necessite necessite de changer la logique)
 def Revert_AlphaBeta(board,p,predi):
+    print("je suis rever_alpha beta et on m'utilise avec une depth de",predi)
     alpha=-100000000 #equivalent a -inf
     beta=1000000000  #equivalent a +inf
     best_score= -100000000 #equivalent a -inf
@@ -383,7 +384,7 @@ def Revert_AlphaBeta(board,p,predi):
 @lru_cache(maxsize=None)
 def Revert_AlphaBeta_Algo(board, p, predi, alpha, beta):
     if predi == 0 or check_W(board)!=0 :       #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
-        eval_score =p*(evaluer(board,p)-evaluer(board,-p))
+        eval_score =-p*(evaluer(board,p)-evaluer(board,-p))
         return eval_score
     
     l = move_possible(board, p)

@@ -10,6 +10,7 @@ import time
 import game
 from ia import Minmax_facile, Minmax_Ultime, AlphaBeta, Revert_Minmax_Ultime, Revert_AlphaBeta
 
+
 # plateau partagé (main.py importe `board` depuis ici)
 board = [[0 for _ in range(5)] for __ in range(5)]
 
@@ -166,8 +167,8 @@ def ia_vs_ia_config_menu(screen, clock, font, bigfont):
     # Configuration par défaut
     ia1_algo_index = 1  # AlphaBeta
     ia2_algo_index = 2  # Minmax
-    ia1_depth = 3
-    ia2_depth = 3
+    ia1_depth = 4
+    ia2_depth = 4
     
     # Input boxes pour les profondeurs
     ia1_depth_input_box = pygame.Rect(MARGIN + 200, 220, 80, 32)
@@ -293,7 +294,7 @@ def ia_vs_ia_config_menu(screen, clock, font, bigfont):
         screen.blit(depth2_txt, (ia2_depth_input_box.x + 6, ia2_depth_input_box.y + 6))
         
         # Note
-        note = font.render("Note: Profondeurs 3-4 recommandées", True, (200, 180, 100))
+        note = font.render("Note: Profondeur de 4 recommandées", True, (200, 180, 100))
         screen.blit(note, (MARGIN, 360))
         
         # Boutons
@@ -509,6 +510,8 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
 
     running = True
     auto_mode = True if difficulty == 3 else False
+    current_player = IA
+
 
     while running:
         for event in pygame.event.get():
@@ -598,26 +601,31 @@ def lancer_plateau(start_board=None, start_difficulty=None, start_depth=3):
                                 selected = None
 
         # IA vs IA automatic play
+        
         if not game_over and auto_mode and difficulty == 3:
             now = pygame.time.get_ticks()
             if now - last_ai_time > ai_delay:
-                occupied = sum(1 for r in board for v in r if v != 0)
-                
-                if occupied % 2 == 0:
-                    current_player = IA
+
+                if current_player == IA:
                     ai_name = ia_config['ia1_algo']
                     ai_depth = ia_config['ia1_depth']
+                    print("mon algo est" ,ai_name ,"je suis le joueur" ,current_player)
                 else:
-                    current_player = -1
                     ai_name = ia_config['ia2_algo']
                     ai_depth = ia_config['ia2_depth']
+                    print("mon algo est" ,ai_name, "je suis le joueur", current_player)
 
                 apply_ai_move_by_name(ai_name, board, current_player, ai_depth)
 
                 if game.check_W(board):
                     game_over = True
                     winner = current_player
+                    print(current_player)
+                else:
+                    current_player *= -1   # switch turn
+
                 last_ai_time = now
+
 
         draw_board(screen, selected)
         
