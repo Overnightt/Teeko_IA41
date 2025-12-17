@@ -383,7 +383,7 @@ def Revert_AlphaBeta(board,p,predi):
 @lru_cache(maxsize=None)
 def Revert_AlphaBeta_Algo(board, p, predi, alpha, beta):
     if predi == 0 or check_W(board)!=0 :       #si on arrive a la fin de la recursion ou sur un plateau entrainant la victoire on s'arrete
-        eval_score =p*(evaluer(board,p)-evaluer(board,-p))
+        eval_score =-p*(evaluer(board,p)-evaluer(board,-p))
         return eval_score
     
     l = move_possible(board, p)
