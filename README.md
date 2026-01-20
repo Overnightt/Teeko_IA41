@@ -55,11 +55,3 @@ This section details the performance comparison between the standard Minmax algo
 
 The results confirm that **Alpha-Beta Pruning significantly improves search speed**, especially at higher depths where the number of possible game states explodes.
 
-### 🤖 AI vs AI Comparison (Strategic Evaluation)
-
-To determine the strength of our AI and identify the best strategic configuration, we will organize **automatic matches** between different versions of the AI (or the AI playing at different search depths).
-
-These comparisons will help to:
-* Establish an **ELO ranking** for different AI configurations.
-* Determine the **optimal search depth** that offers the best compromise between win performance and response speed.
-* Analyze victory statistics (win percentage, average number of moves, etc.).
